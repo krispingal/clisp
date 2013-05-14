@@ -1,0 +1,653 @@
+% 14may13
+% Jon Kleiser
+
+\documentclass[10pt,a4paper]{article}
+\usepackage{graphicx}
+
+\textwidth 1.4\textwidth
+\textheight 1.125\textheight
+\oddsidemargin 0em
+\evensidemargin 0em
+\headsep 0em
+\parindent 0em
+\parskip 6pt
+
+\title{Ninety-Nine Lisp Problems}
+\author{Alexander Burger\\abu@software-lab.de}
+\date{2011-12-01}
+
+\begin{document}
+\maketitle
+
+\section*{Ninety-Nine Lisp Problems}
+
+Based on a Prolog problem list by werner.hett@hti.bfh.ch. The original is
+\underline{HERE}\footnote{https://prof.ti.bfh.ch/hew1/informatik3/prolog/p-99}.
+
+Work in progress! Until now, only about half of the problems are solved. Another
+possibility, of course, would be translating the Prolog solutions to Pilog ;-)
+
+\section*{Working with lists}
+
+\subsection*{\underline{P01}\footnote{http://picolisp.com/5000/!wiki?99p01} (*) Find the last box of a list.}
+\begin{verbatim}
+   : (my-last '(a b c d))
+   -> (d)
+\end{verbatim}
+
+
+\subsection*{\underline{P02}\footnote{http://picolisp.com/5000/!wiki?99p02} (*) Find the last but one box of a list.}
+\begin{verbatim}
+   : (my-but-last '(a b c d))
+   -> (c d)
+\end{verbatim}
+
+
+\subsection*{\underline{P03}\footnote{http://picolisp.com/5000/!wiki?99p03} (*) Find the K'th element of a list.}
+The first element in the list is number 1.
+\begin{verbatim}
+   : (element-at '(a b c d e) 3)
+   -> c
+\end{verbatim}
+
+
+\subsection*{\underline{P04}\footnote{http://picolisp.com/5000/!wiki?99p04} (*) Find the number of elements of a list.}
+
+\subsection*{\underline{P05}\footnote{http://picolisp.com/5000/!wiki?99p05} (*) Reverse a list.}
+
+\subsection*{\underline{P06}\footnote{http://picolisp.com/5000/!wiki?99p06} (*) Find out whether a list is a palindrome.}
+A palindrome can be read forward or backward; e.g. (x a m a x).
+
+\subsection*{\underline{P07}\footnote{http://picolisp.com/5000/!wiki?99p07} (**) Flatten a nested list structure.}
+Transform a list, possibly holding lists as elements into a `flat'
+list by replacing each list with its elements (recursively).
+\begin{verbatim}
+   : (my-flatten '(a (b (c d) e)))
+   -> (a b c d e)
+\end{verbatim}
+
+
+\subsection*{\underline{P08}\footnote{http://picolisp.com/5000/!wiki?99p08} (**) Eliminate consecutive duplicates of list elements.}
+If a list contains repeated elements they should be replaced
+with a single copy of the element. The order of the elements should
+not be changed.
+\begin{verbatim}
+   : (compress '(a a a a b c c a a d e e e e))
+   -> (a b c a d e)
+\end{verbatim}
+
+
+\subsection*{\underline{P09}\footnote{http://picolisp.com/5000/!wiki?99p09} (**) Pack consecutive duplicates of list elements into sublists.}
+If a list contains repeated elements they should be placed in separate sublists.
+\begin{verbatim}
+   : (consecDups '(a a a a b c c a a d e e e e))
+   -> ((a a a a) (b) (c c) (a a) (d) (e e e e))
+\end{verbatim}
+
+
+\subsection*{\underline{P10}\footnote{http://picolisp.com/5000/!wiki?99p10} (*) Run-length encoding of a list.}
+Use the result of problem P09 to implement the so-called
+run-length encoding data compression method. Consecutive duplicates
+of elements are encoded as lists (N E) where N is the number
+of duplicates of the element E.
+\begin{verbatim}
+   : (encode '(a a a a b c c a a d e e e e))
+   -> ((4 a) (1 b) (2 c) (2 a) (1 d)(4 e))
+\end{verbatim}
+
+
+\subsection*{\underline{P11}\footnote{http://picolisp.com/5000/!wiki?99p11} (*) Modified run-length encoding.}
+Modify the result of problem P10 in such a way that if an element
+has no duplicates it is simply copied into the result list. Only
+elements with duplicates are transferred as (N E) lists.
+\begin{verbatim}
+   : (encode-modified '(a a a a b c c a a d e e e e))
+   -> ((4 a) b (2 c) (2 a) d (4 e))
+\end{verbatim}
+
+
+\subsection*{\underline{P12}\footnote{http://picolisp.com/5000/!wiki?99p12} (**) Decode a run-length encoded list.}
+Given a run-length code list generated as specified
+in problem P11. Construct its uncompressed version.
+\begin{verbatim}
+   : (decode '((4 a) b (2 c) (2 a) d (4 e)))
+   -> (a a a a b c c a a d e e e e)
+\end{verbatim}
+
+
+\subsection*{\underline{P13}\footnote{http://picolisp.com/5000/!wiki?99p13} (**) Run-length encoding of a list (direct solution).}
+Implement the so-called run-length encoding data compression
+method directly. I.e. don't explicitly create the sublists
+containing the duplicates, as in problem P09, but only count them.
+As in problem P11, simplify the result list by replacing the singleton
+lists (1 X) by X.
+\begin{verbatim}
+   : (encode-direct '(a a a a b c c a a d e e e e))
+   -> ((4 a) b (2 c) (2 a) d (4 e))
+\end{verbatim}
+
+
+\subsection*{\underline{P14}\footnote{http://picolisp.com/5000/!wiki?99p14} (*) Duplicate the elements of a list.}
+\begin{verbatim}
+   : (dupli '(a b c c d))
+   -> (a a b b c c c c d d)
+\end{verbatim}
+
+
+\subsection*{\underline{P15}\footnote{http://picolisp.com/5000/!wiki?99p15} (**) Replicate the elements of a list a given number of times.}
+\begin{verbatim}
+   : (repli '(a b c) 3)
+   -> (a a a b b b c c c)
+\end{verbatim}
+
+
+\subsection*{\underline{P16}\footnote{http://picolisp.com/5000/!wiki?99p16} (**) Drop every N'th element from a list.}
+\begin{verbatim}
+   : (drop '(a b c d e f g h i k) 3)
+   -> (a b d e g h k)
+\end{verbatim}
+
+
+\subsection*{\underline{P17}\footnote{http://picolisp.com/5000/!wiki?99p17} (*) Split a list into two parts; the length of the first
+part is given.}
+Do not use any predefined predicates.
+\begin{verbatim}
+   : (splitAt '(a b c d e f g h i k) 3)
+   -> ((a b c) (d e f g h i k))
+\end{verbatim}
+
+
+\subsection*{\underline{P18}\footnote{http://picolisp.com/5000/!wiki?99p18} (**) Extract a slice from a list.}
+Given two indices, I and K, the slice is the list
+containing the elements between the I'th and K'th element
+of the original list (both limits included). Start counting
+the elements with 1.
+\begin{verbatim}
+   : (slice '(a b c d e f g h i k) 3 7)
+   -> (c d e f g)
+\end{verbatim}
+
+
+\subsection*{\underline{P19}\footnote{http://picolisp.com/5000/!wiki?99p19} (**) Rotate a list N places to the left.}
+\begin{verbatim}
+   : (rotate '(a b c d e f g h) 3)
+   -> (d e f g h a b c)
+
+   : (rotate '(a b c d e f g h) -2)
+   -> (g h a b c d e f)
+\end{verbatim}
+
+Hint: Use the predefined functions length and append,
+as well as the result of problem P17.
+
+\subsection*{\underline{P20}\footnote{http://picolisp.com/5000/!wiki?99p20} (*) Remove the K'th element from a list.}
+\begin{verbatim}
+   : (remove-at '(a b c d) 2)
+   -> (a c d)
+\end{verbatim}
+
+
+\subsection*{\underline{P21}\footnote{http://picolisp.com/5000/!wiki?99p21} (*) Insert an element at a given position into a list.}
+\begin{verbatim}
+   : (insert-at 'alfa '(a b c d) 2)
+   -> (a alfa b c d)
+\end{verbatim}
+
+
+\subsection*{\underline{P22}\footnote{http://picolisp.com/5000/!wiki?99p22} (*) Create a list containing all integers within a given range.}
+If first argument is smaller than second, produce a list in
+decreasing order.
+\begin{verbatim}
+   : (range 4 9)
+   -> (4 5 6 7 8 9)
+\end{verbatim}
+
+
+\subsection*{\underline{P23}\footnote{http://picolisp.com/5000/!wiki?99p23} (**) Extract a given number of randomly selected elements from a
+list.}
+The selected items shall be returned in a list.
+\begin{verbatim}
+   : (rnd-select '(a b c d e f g h) 3)
+   -> (e d a)
+\end{verbatim}
+
+Hint: Use the built-in random number generator and the result of problem P20.
+
+\subsection*{\underline{P24}\footnote{http://picolisp.com/5000/!wiki?99p24} (*) Lotto: Draw N different random numbers from the set 1..M.}
+The selected numbers shall be returned in a list.
+\begin{verbatim}
+   : (lotto-select 6 49)
+   -> (23 1 17 33 21 37)
+\end{verbatim}
+
+Hint: Combine the solutions of problems P22 and P23.
+
+\subsection*{\underline{P25}\footnote{http://picolisp.com/5000/!wiki?99p25} (*) Generate a random permutation of the elements of a list.}
+\begin{verbatim}
+   : (rnd-permu '(a b c d e f))
+   -> (b a d c e f)
+\end{verbatim}
+
+Hint: Use the solution of problem P23.
+
+\subsection*{\underline{P26}\footnote{http://picolisp.com/5000/!wiki?99p26} (**) Generate the combinations of K distinct objects
+chosen from the N elements of a list}
+In how many ways can a committee of 3 be chosen from a group of
+12 people? We all know that there are C(12,3) = 220 possibilities
+(C(N,K) denotes the well-known binomial coefficients). For pure
+mathematicians, this result may be great. But \textit{we} want to
+really generate all the possibilities in a list.
+\begin{verbatim}
+   : (combination 3 '(a b c d e f))
+   -> ((a b c) (a b d) (a b e) ... )
+\end{verbatim}
+
+
+\subsection*{\underline{P27}\footnote{http://picolisp.com/5000/!wiki?99p27} (**) Group the elements of a set into disjoint subsets.}
+a) In how many ways can a group of 9 people work in 3 disjoint subgroups
+of 2, 3 and 4 persons? Write a function that generates all the
+possibilities and returns them in a list.
+\begin{verbatim}
+   : (group3 '(aldo beat carla david evi flip gary hugo ida))
+   -> (((aldo beat) (carla david evi) (flip gary hugo ida))
+   ... )
+\end{verbatim}
+
+b) Generalize the above predicate in a way that we can specify a list
+of group sizes and the predicate will return a list of groups.
+\begin{verbatim}
+   : (subsets '(aldo beat carla david evi flip gary hugo ida) '(2 2 5))
+   -> (((aldo beat) (carla david) (evi flip gary hugo ida))
+   ... )
+\end{verbatim}
+
+Note that we do not want permutations of the group members; i.e.
+((aldo beat) ...) is the same solution as ((beat aldo) ...). However,
+we make a difference between ((aldo beat) (carla david) ...) and
+((carla david) (aldo beat) ...).
+
+You may find more about this combinatorial problem in a good book
+on discrete mathematics under the term ``multinomial coefficients''.
+
+\subsection*{\underline{P28}\footnote{http://picolisp.com/5000/!wiki?99p28} (**) Sorting a list of lists according to length of sublists}
+a) We suppose that a list contains elements that are
+lists themselves. The objective is to sort the elements of this list
+according to their \textbf{length}. E.g. short lists first, longer lists
+later, or vice versa.
+\begin{verbatim}
+   : (lsort '((a b c) (d e) (f g h) (d e) (i j k l) (m n) (o)))
+   -> ((o) (d e) (d e) (m n) (a b c) (f g h) (i j k l))
+\end{verbatim}
+
+b) Again, we suppose that a list contains elements that are
+lists themselves. But this time the objective is to sort the elements
+of this list according to their \textbf{length frequency}; i.e.,
+in the default,
+where sorting is done ascendingly, lists with rare lengths are placed
+first, others with a more frequent length come later.
+\begin{verbatim}
+   : (lfsort '((a b c) (d e) (f g h) (d e) (i j k l) (m n) (o)))
+   -> ((i j k l) (o) (a b c) (f g h) (d e) (d e) (m n))
+\end{verbatim}
+
+Note that in the above example, the first two lists in the result
+have length 4 and 1, both lengths appear just once. The third and
+forth list have length 3 which appears twice (there are two list of this
+length). And finally, the last three lists have length 2. This is
+the most frequent length.
+
+\subsection*{\underline{P29}\footnote{http://picolisp.com/5000/!wiki?99p29} No task defined yet}
+\subsection*{\underline{P30}\footnote{http://picolisp.com/5000/!wiki?99p30} No task defined yet}
+
+\section*{Arithmetic}
+
+\subsection*{\underline{P31}\footnote{http://picolisp.com/5000/!wiki?99p31} (**) Determine whether a given integer number is prime.}
+\begin{verbatim}
+   : (is-prime 7)
+   -> T
+\end{verbatim}
+
+
+\subsection*{\underline{P32}\footnote{http://picolisp.com/5000/!wiki?99p32} (**) Determine the greatest common divisor of two positive integer
+numbers.}
+Use Euclid's algorithm.
+\begin{verbatim}
+   : (gcd 36 63)
+   -> 9
+\end{verbatim}
+
+
+\subsection*{\underline{P33}\footnote{http://picolisp.com/5000/!wiki?99p33} (*) Determine whether two positive integer numbers are coprime.}
+Two numbers are coprime if their greatest common divisor equals 1.
+\begin{verbatim}
+   : (coprime 35 64)
+   -> T
+\end{verbatim}
+
+
+\subsection*{\underline{P34}\footnote{http://picolisp.com/5000/!wiki?99p34} (**) Calculate Euler's totient function phi(m).}
+Euler's so-called totient function phi(m) is defined as the number
+of positive integers r (1 \&lt;= r \&lt; m) that are coprime to m.
+
+Example: m = 10: r = 1,3,7,9; thus phi(m) = 4.
+Note the special case: phi(1) = 1.
+\begin{verbatim}
+   : (totient-phi 10)
+   -> 4
+\end{verbatim}
+
+Find out what the value of phi(m) is if m is a prime number.
+Euler's totient function plays an important role in one of the
+most widely used public key cryptography methods (RSA). In this
+exercise you should use the most primitive method to calculate
+this function (there are smarter ways that we shall discuss later).
+
+\subsection*{\underline{P35}\footnote{http://picolisp.com/5000/!wiki?99p35} (**) Determine the prime factors of a given positive integer.}
+Construct a flat list containing the prime factors
+in ascending order.
+\begin{verbatim}
+   : (prime-factors 315)
+   -> (3 3 5 7)
+\end{verbatim}
+
+
+\subsection*{\underline{P36}\footnote{http://picolisp.com/5000/!wiki?99p36} (**) Determine the prime factors of a given positive integer (2).}
+Construct a list containing the prime factors and their multiplicity.
+\begin{verbatim}
+   : (prime-factors-mult 315)
+   -> ((3 2) (5 1) (7 1))
+\end{verbatim}
+
+Hint: The problem is similar to problem P13.
+
+\subsection*{\underline{P37}\footnote{http://picolisp.com/5000/!wiki?99p37} (**) Calculate Euler's totient function phi(m) (improved).}
+See problem P34 for the definition of Euler's totient function.
+If the list of the prime factors of a number m is known in the form
+of problem P36 then the function phi(m) can be efficiently
+calculated as follows:
+
+Let ((p1 m1) (p2 m2) (p3 m3) ...) be the list of prime factors (and
+their multiplicities) of a given number m. Then phi(m) can be calculated
+with the following formula:
+\begin{verbatim}
+phi(m) = (p1 - 1) * p1 ** (m1 - 1) + (p2 - 1) * p2 ** (m2 - 1) + (p3 - 1) * p3 ** (m3 - 1) + ...
+\end{verbatim}
+
+Note that a ** b stands for the b'th power of a.
+
+\subsection*{\underline{P38}\footnote{http://picolisp.com/5000/!wiki?99p38} (*) Compare the two methods of calculating Euler's totient function.}
+Use the solutions of problems P34 and P37 to compare the algorithms.
+Take the number of logical inferences as a measure for efficiency.
+Try to calculate phi(10090) as an example.
+
+\subsection*{\underline{P39}\footnote{http://picolisp.com/5000/!wiki?99p39} (*) A list of prime numbers.}
+Given a range of integers by its lower and upper limit, construct
+a list of all prime numbers in that range.
+
+\subsection*{\underline{P40}\footnote{http://picolisp.com/5000/!wiki?99p40} (**) Goldbach's conjecture.}
+Goldbach's conjecture says that every positive even number
+greater than 2 is the sum of two prime numbers. Example: 28 = 5 + 23.
+It is one of the most famous facts in number theory that has not
+been proved to be correct in the general case.
+It has been \textit{numerically} confirmed up to very large numbers.
+Write a predicate to find the two prime numbers
+that sum up to a given even integer.
+\begin{verbatim}
+   : (goldbach 28)
+   -> (5 23)
+\end{verbatim}
+
+
+\subsection*{\underline{P41}\footnote{http://picolisp.com/5000/!wiki?99p41} (**) A list of Goldbach compositions.}
+Given a range of integers by its lower and upper limit, print
+a list of all even numbers and their Goldbach composition.
+\begin{verbatim}
+   : (goldbach-list 9 20)
+   10 = 3 + 7
+   12 = 5 + 7
+   14 = 3 + 11
+   16 = 3 + 13
+   18 = 5 + 13
+   20 = 3 + 17
+\end{verbatim}
+
+In most cases, if an even number is written as the sum of two
+prime numbers, one of them is very small. Very rarely, the primes
+are both bigger than say 50. Try to find out how many such cases
+there are in the range 2..3000.
+
+Example (for a print limit of 50):
+\begin{verbatim}
+   : (goldbach-list 1 2000 50)
+   992 = 73 + 919
+   1382 = 61 + 1321
+   1856 = 67 + 1789
+   1928 = 61 + 1867
+\end{verbatim}
+
+
+\subsection*{\underline{P42}\footnote{http://picolisp.com/5000/!wiki?99p42} No task defined yet}
+\subsection*{\underline{P43}\footnote{http://picolisp.com/5000/!wiki?99p43} No task defined yet}
+\subsection*{\underline{P44}\footnote{http://picolisp.com/5000/!wiki?99p44} No task defined yet}
+\subsection*{\underline{P45}\footnote{http://picolisp.com/5000/!wiki?99p45} No task defined yet}
+
+\section*{Logic and Codes}
+
+\subsection*{\underline{P46}\footnote{http://picolisp.com/5000/!wiki?99p46} (**) Truth tables for logical expressions.}
+Define a function that takes a logical expression (a function of two variables)
+and prints the truth table.
+\begin{verbatim}
+   : (truthTable '((A B) (and A (or A B))))
+   T T T
+   T NIL T
+   NIL T NIL
+   NIL NIL NIL
+\end{verbatim}
+
+
+\subsection*{\underline{P51}\footnote{http://picolisp.com/5000/!wiki?99p51} No task defined yet}
+\subsection*{\underline{P52}\footnote{http://picolisp.com/5000/!wiki?99p52} No task defined yet}
+\subsection*{\underline{P53}\footnote{http://picolisp.com/5000/!wiki?99p53} No task defined yet}
+
+\subsection*{\underline{P74}\footnote{http://picolisp.com/5000/!wiki?99p74} No task defined yet}
+\subsection*{\underline{P75}\footnote{http://picolisp.com/5000/!wiki?99p75} No task defined yet}
+\subsection*{\underline{P76}\footnote{http://picolisp.com/5000/!wiki?99p76} No task defined yet}
+\subsection*{\underline{P77}\footnote{http://picolisp.com/5000/!wiki?99p77} No task defined yet}
+\subsection*{\underline{P78}\footnote{http://picolisp.com/5000/!wiki?99p78} No task defined yet}
+\subsection*{\underline{P79}\footnote{http://picolisp.com/5000/!wiki?99p79} No task defined yet}
+
+\section*{Miscellaneous Problems}
+
+\subsection*{\underline{P90}\footnote{http://picolisp.com/5000/!wiki?99p90} (**) Eight queens problem}
+This is a classical problem in computer science. The objective is to place eight
+queens on a chessboard so that no two queens are attacking each other; i.e., no
+two queens are in the same row, the same column, or on the same
+diagonal.
+
+Hint: Represent the positions of the queens as a list of numbers 1..N.
+
+Example: (4 2 7 3 6 8 5 1) means that the queen in the first column is in row 4,
+the queen in the second column is in row 2, etc. Use the generate-and-test
+paradigm.
+
+\subsection*{\underline{P91}\footnote{http://picolisp.com/5000/!wiki?99p91} (**) Knight's tour}
+Another famous problem is this one: How can a knight jump on
+an NxN chessboard in such a way that it visits every square exactly
+once?
+
+Hints: Represent the squares by pairs of their coordinates of
+the form X/Y, where both X and Y are integers between 1 and N.
+(Note that '/' is just a convenient functor, not division!)
+Define the relation jump(N,X/Y,U/V) to express the fact that a
+knight can jump from X/Y to U/V on a NxN chessboard. And finally,
+represent the solution of our problem as a list of N*N knight
+positions (the knight's tour).
+
+\subsection*{\underline{P92}\footnote{http://picolisp.com/5000/!wiki?99p92} (***) Von Koch's conjecture}
+
+\begin{figure}[h]
+\begin{flushleft}
+\includegraphics{img.pdf}
+\end{flushleft}
+\end{figure}
+
+
+Several years ago I met a mathematician who was intrigued by
+a problem for which he didn't know a solution. His name was Von Koch,
+and I don't know whether the problem has been solved since.
+
+Anyway the puzzle goes like this: Given a tree with N nodes
+(and hence N-1 edges). Find a way to enumerate the nodes from 1 to N
+and, accordingly, the edges from 1 to N-1 in such a way, that for
+each edge K the difference of its node numbers equals to K.
+The conjecture is that this is always possible.
+
+\begin{figure}[h]
+\begin{flushleft}
+\includegraphics{img.pdf}
+\end{flushleft}
+\end{figure}
+
+
+For small trees the problem is easy to solve by hand. However, for
+larger trees, and 14 is already very large, it is extremely difficult
+to find a solution. And remember, we don't know for sure whether there is
+always a solution!
+
+Write a predicate that calculates a numbering scheme for a given
+tree. What is the solution for the larger tree pictured above?
+
+\subsection*{\underline{P93}\footnote{http://picolisp.com/5000/!wiki?99pp93} (***) An arithmetic puzzle}
+Given a list of integer numbers, find a correct way of inserting
+arithmetic signs (operators) such that the result is a correct equation.
+Example: With the list of numbers (2 3 5 7 11) we can form the
+equations  2-3+5+7 = 11  or  2 = (3*5+7)/11 (and ten others!).
+
+\subsection*{\underline{P95}\footnote{http://picolisp.com/5000/!wiki?99p95} (**) English number words}
+On financial documents, like cheques, numbers must sometimes be written in full
+words. Example: 175 must be written as ``one hundred seventy-five``. Write a
+function 'fullWords' to return (non-negative) integer numbers in full words.
+
+\subsection*{\underline{P96}\footnote{http://picolisp.com/5000/!wiki?99p96} (**) Syntax checker}
+
+\begin{figure}[h]
+\begin{flushleft}
+\includegraphics{img.pdf}
+\end{flushleft}
+\end{figure}
+
+
+In a certain programming language (Ada) identifiers are defined
+by the syntax diagram (railroad chart) opposite.
+Transform the syntax diagram into a system of syntax diagrams
+which do not contain loops; i.e. which are purely recursive.
+Using these modified diagrams, write a function 'identifier' that can
+check whether or not a given string is a legal identifier.
+
+\subsection*{\underline{P97}\footnote{http://picolisp.com/5000/!wiki?99p97} (**) Sudoku}
+Sudoku puzzles go like this:
+\begin{verbatim}
+Problem statement                 Solution
+
+ .  .  4 | 8  .  . | .  1  7      9  3  4 | 8  2  5 | 6  1  7
+         |         |                      |         |
+ 6  7  . | 9  .  . | .  .  .      6  7  2 | 9  1  4 | 8  5  3
+         |         |                      |         |
+ 5  .  8 | .  3  . | .  .  4      5  1  8 | 6  3  7 | 9  2  4
+ --------+---------+--------      --------+---------+--------
+ 3  .  . | 7  4  . | 1  .  .      3  2  5 | 7  4  8 | 1  6  9
+         |         |                      |         |
+ .  6  9 | .  .  . | 7  8  .      4  6  9 | 1  5  3 | 7  8  2
+         |         |                      |         |
+ .  .  1 | .  6  9 | .  .  5      7  8  1 | 2  6  9 | 4  3  5
+ --------+---------+--------      --------+---------+--------
+ 1  .  . | .  8  . | 3  .  6      1  9  7 | 5  8  2 | 3  4  6
+         |         |                      |         |
+ .  .  . | .  .  6 | .  9  1      8  5  3 | 4  7  6 | 2  9  1
+         |         |                      |         |
+ 2  4  . | .  .  1 | 5  .  .      2  4  6 | 3  9  1 | 5  7  8
+\end{verbatim}
+
+Every spot in the puzzle belongs to a (horizontal) row and a (vertical)
+column, as well as to one single 3x3 square (which we call ``square''
+for short). At the beginning, some of the spots carry a single-digit
+number between 1 and 9. The problem is to fill the missing spots with
+digits in such a way that every number between 1 and 9 appears exactly
+once in each row, in each column, and in each square.
+
+\subsection*{\underline{P98}\footnote{http://picolisp.com/5000/!wiki?99p98} (***) Nonograms}
+Around 1994, a certain kind of puzzles was very popular in England.
+The ``Sunday Telegraph'' newspaper wrote: ``Nonograms are puzzles from
+Japan and are currently published each week only in The Sunday
+Telegraph.  Simply use your logic and skill to complete the grid
+and reveal a picture or diagram.`` As a PicoLisp programmer, you are in
+a better situation: you can have your computer do the work! Just write
+a little program ;-).
+
+The puzzle goes like this: Essentially, each row and column of a
+rectangular bitmap is annotated with the respective lengths of
+its distinct strings of occupied cells. The person who solves the puzzle
+must complete the bitmap given only these lengths.
+\begin{verbatim}
+   Problem statement:          Solution:
+
+   |_|_|_|_|_|_|_|_| 3         |_|X|X|X|_|_|_|_| 3
+   |_|_|_|_|_|_|_|_| 2 1       |X|X|_|X|_|_|_|_| 2 1
+   |_|_|_|_|_|_|_|_| 3 2       |_|X|X|X|_|_|X|X| 3 2
+   |_|_|_|_|_|_|_|_| 2 2       |_|_|X|X|_|_|X|X| 2 2
+   |_|_|_|_|_|_|_|_| 6         |_|_|X|X|X|X|X|X| 6
+   |_|_|_|_|_|_|_|_| 1 5       |X|_|X|X|X|X|X|_| 1 5
+   |_|_|_|_|_|_|_|_| 6         |X|X|X|X|X|X|_|_| 6
+   |_|_|_|_|_|_|_|_| 1         |_|_|_|_|X|_|_|_| 1
+   |_|_|_|_|_|_|_|_| 2         |_|_|_|X|X|_|_|_| 2
+   1 3 1 7 5 3 4 3             1 3 1 7 5 3 4 3
+   2 1 5 1                     2 1 5 1
+\end{verbatim}
+
+For the example above, the problem can be stated as the two lists
+((3) (2 1) (3 2) (2 2) (6) (1 5) (6) (1) (2)) and
+((1 2) (3 1) (1 5) (7 1) (5) (3) (4) (3))
+which give the ``solid'' lengths of the rows and columns, top-to-bottom and
+left-to-right, respectively. Published puzzles are larger than this
+example, e.g. 25 x 20, and apparently always have unique solutions.
+
+\subsection*{\underline{P99}\footnote{http://picolisp.com/5000/!wiki?99p99} (***) Crossword puzzle}
+Given an empty (or almost empty) framework of a crossword puzzle and
+a set of words. The problem is to place the words into the framework.
+
+\begin{figure}[h]
+\begin{flushleft}
+\includegraphics{img.pdf}
+\end{flushleft}
+\end{figure}
+
+
+The particular crossword puzzle is specified in a text file which
+first lists the words (one word per line) in an arbitrary order. Then,
+after an empty line, the crossword framework is defined. In this
+framework specification, an empty character location is represented
+by a dot (.). In order to make the solution easier, character locations
+can also contain predefined character values. The puzzle opposite
+is defined in the file \underline{p99a.dat}\footnote{http://picolisp.com/5000/!wiki?99p99a}, other examples
+are \underline{p99b.dat}\footnote{http://picolisp.com/5000/!wiki?99p99b} and \underline{p99d.dat}\footnote{http://picolisp.com/5000/!wiki?99p99d}.
+There is also an example of a puzzle (\underline{p99c.dat}\footnote{http://picolisp.com/5000/!wiki?99p99c})
+which does not have a solution.
+
+\textit{Words} are strings (character lists) of at least two characters.
+A horizontal or vertical sequence of character places in the
+crossword puzzle framework is called a \textit{site}.
+
+Our problem is to find a compatible way of placing words onto sites.
+
+\textbf{Hints:}
+
+(1) The problem is not easy. You will need some time to
+thoroughly understand it. So, don't give up too early! And remember
+that the objective is a clean solution, not just a quick-and-dirty hack!
+
+(2) Reading the data file is a tricky problem (in Prolog?).
+
+(3) For efficiency reasons it is important, at least for
+larger puzzles, to sort the words and the sites in a particular order.
+For this part of the problem, the solution of P28 may be very helpful.
+\end{document}
