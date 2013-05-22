@@ -1,20 +1,22 @@
-;Extract a given no of randomly selected elements 
-
-(defun remove-at (lis pos)
+(defun rnd-select (lis temp size)
   (cond
-   ((endp lis)                      nil)
-   ((eq pos 1)                      (cdr lis))
-   (t                               (cons (car lis) (remove-at (cdr lis) (- pos 1))))
+   ((endp lis)                             nil)
+   ((eq (length temp) size)                temp)
+   (t                                      (rnd-select lis (extract-check lis temp nil size) size))
    )
 )
 
-(defun rnd-select (lis count)
+(defun extract-check (lis temp bar size)
   (cond
-   ((endp lis)                      nil)
-   ((> (length lis) count)          (rnd-select (remove-at lis (random (length lis))) count))
-   (t                               lis)
+   ((eq bar nil)                           (extract-check lis temp (nth (+ (random size) 1) lis) size))
+   ((endp temp)                            (cons bar temp))
+   ((eq bar (car temp))                    temp)
+   (t                                      (cons (car temp) (extract-check lis (cdr temp) bar size)))
    )
 )
 
+(defun foo (lis size)
+  (rnd-select lis nil size)
+)
 
-(print (rnd-select '(1 2 3 4 5 6 7 8 9) 4))
+(print (foo '(z x c v b n m a s d) 5))
