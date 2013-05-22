@@ -1,3 +1,7 @@
+;Extract a given number of randomly selected elements of a list
+
+(setf *random-state* (make-random-state t))
+
 (defun rnd-select (lis temp size)
   (cond
    ((endp lis)                             nil)
@@ -8,7 +12,7 @@
 
 (defun extract-check (lis temp bar size)
   (cond
-   ((eq bar nil)                           (extract-check lis temp (nth (+ (random size) 1) lis) size))
+   ((eq bar nil)                           (extract-check lis temp (nth (random size) lis) size))
    ((endp temp)                            (cons bar temp))
    ((eq bar (car temp))                    temp)
    (t                                      (cons (car temp) (extract-check lis (cdr temp) bar size)))
