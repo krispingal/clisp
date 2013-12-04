@@ -1,5 +1,5 @@
 ;Determine the totient-phi function of a number (modified)
-
+;using prime factorisation of the number
 (defun totient-phi (lis)
   (cond
    ((endp lis)                             0)
@@ -46,8 +46,9 @@
   (setf lis (encode (pack (prime-factors num 2 (+ (isqrt num) 1)))) )
   (print lis)
   (- (totient-phi lis) (- (length lis) 1))
-  ;(prime-factors num 2 (sqrt num))
+  ;(prime-factors num 2 (sqrt  num))
 )
 
+(print "Euler's totient of 36")
 (print (foo 36))
 
